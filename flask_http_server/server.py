@@ -3,6 +3,7 @@ import subprocess
 import time
 
 from flask import Flask
+from subprocess import PIPE
 
 is_slave_running = False
 
@@ -13,7 +14,7 @@ def terminate_slave():
 
 def start_slave():
     start_time = time.time()
-    result = subprocess.run(['ansible-playbook', '../vm_manager/slave_start.yml'], capture_output=True)
+    result = subprocess.run(['ansible-playbook', '../vm_manager/slave_start.yml'], stdout=PIPE, stderr=PIPE)
     if result.returncode != 0:
         print('stdout:', result.stdout.decode('utf-8'))
         print('stderr:', result.stderr.decode('utf-8'))
