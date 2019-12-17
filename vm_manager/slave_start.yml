@@ -17,11 +17,14 @@
          instance_tags:
             Name: slave
          
-      register: ec2
+      register: slave_ec2
+      
+      debug:
+        msg: "{{ slave_ec2['ansible_facts']['ansible_ec2_public_ipv4'] }}"
     
     - name: Add all instance public IPs to host group
       add_host: hostname={{ item.public_ip }} groups=ec2hosts
-      loop: "{{ ec2.instances }}"
+      loop: "{{ slave_ec2.instances }}"
     - name: install python module
       command: python3 -m pip install requests
 
