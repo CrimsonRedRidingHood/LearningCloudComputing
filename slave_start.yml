@@ -6,7 +6,7 @@
     - name: Launching a slave VM (EC2 instance)
       ec2:
          region: us-east-2
-         key_name: main_pub
+         key_name: "Main VM SSH Credentials"
          group: global-access-security-group
          instance_type: t2.micro
          image: "ami-0d5d9d301c853a04a"
