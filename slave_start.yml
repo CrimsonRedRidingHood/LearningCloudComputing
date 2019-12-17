@@ -1,0 +1,38 @@
+- hosts: localhost
+  gather_facts: False
+
+  tasks:
+
+    - name: Launching a slave VM (EC2 instance)
+      ec2:
+         region: us-east-2
+         key_name: main_pub
+         group: global-access-security-group
+         instance_type: t2.micro
+         image: "ami-0d5d9d301c853a04a"
+         wait: true
+         exact_count: 1
+         count_tag:
+            Name: slave
+         instance_tags:
+            Name: slave
+         
+      register: ec2
+    
+    - name: Add all instance public IPs to host group
+      add_host: hostname={{ item.public_ip }} groups=ec2hosts
+      loop: "{{ ec2.instances }}"
+    - name: install python module
+      command: python3 -m pip install requests
+
+ 
+
+#- hosts: ec2hosts
+#  name: configuration play
+#  user: ec2-user
+#  gather_facts: true
+#
+#  tasks:
+#
+#     - name: Check NTP service
+#       service: name=ntpd state=started
