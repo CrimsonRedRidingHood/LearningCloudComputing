@@ -1,0 +1,18 @@
+- name: Terminate slave
+  hosts: localhost
+  tasks:
+    - name: Get ec2 instance id by its name tag
+      ec2_instance:
+         region: us-east-2
+         filters:
+            tag:Name: slave
+      register: instances
+   
+    - name: Terminate instances that were previously launched
+      ec2:
+        # Goal state - 'absent' means that we want our instance (VM)
+        # to be absent - obviously, that would terminate and delete it.
+        state: 'absent'
+        region: us-east-2
+        instance_ids: '{{ item.instance_id}}'
+      with_items: "{{instances.instances}}"
