@@ -10,11 +10,11 @@ is_slave_running = False
 app = Flask(__name__)
 
 def terminate_slave():
-    subprocess.run(['ansible-playbook', './../vm_manager/slave_terminate.yml'])
+    subprocess.run(['ansible-playbook', './vm_manager/slave_terminate.yml'])
 
 def start_slave():
     start_time = time.time()
-    result = subprocess.run(['ansible-playbook', './../vm_manager/slave_start.yml'], stdout=PIPE, stderr=PIPE)
+    result = subprocess.run(['ansible-playbook', './vm_manager/slave_start.yml'], stdout=PIPE, stderr=PIPE)
     if result.returncode != 0:
         print('stdout:', result.stdout.decode('utf-8'))
         print('stderr:', result.stderr.decode('utf-8'))
