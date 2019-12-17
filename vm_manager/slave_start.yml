@@ -19,8 +19,9 @@
          
       register: slave_ec2
       
-      debug:
-        msg: "{{ slave_ec2['ansible_facts']['ansible_ec2_public_ipv4'] }}"
+    
+    -  debug:
+         msg: "{{ slave_ec2['ansible_facts']['ansible_ec2_public_ipv4'] }}"
     
     - name: Add all instance public IPs to host group
       add_host: hostname={{ item.public_ip }} groups=ec2hosts
