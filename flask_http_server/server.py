@@ -1,6 +1,7 @@
 import os
 import subprocess
 import time
+import re
 
 from flask import Flask
 from subprocess import PIPE
@@ -29,6 +30,7 @@ def start_slave():
         print('stdout:', result.stdout.decode('utf-8'))
         print('stderr:', result.stderr.decode('utf-8'))
         return
+    print(result.stdout.decode('utf-8'))
     slave_ip = re.findall(r'\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b', result.stdout.decode('utf-8'))[0]
     print('slave vm with public ip', slave_ip, 'has been started')
     return slave_ip
