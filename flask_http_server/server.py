@@ -21,7 +21,7 @@ def start_slave():
     start_time = time.time()
     # used to pass AWS keys to the ansible-playbook
     #extra_vars_argument = '"aws_access_key=' + aws_access_key + ' ' + 'aws_secret_key=' + aws_secret_key + '"'
-    extra_vars_argument = f'{"aws_access_key":"{aws_access_key}","aws_secret_key":"{aws_secret_key}"}'
+    extra_vars_argument = f'{{"aws_access_key":"{aws_access_key}","aws_secret_key":"{aws_secret_key}"}}'
     # DEBUG
     print(extra_vars_argument)
     result = subprocess.run(['ansible-playbook', slave_start_playbook, '--extra-vars', extra_vars_argument], stdout=PIPE, stderr=PIPE)
