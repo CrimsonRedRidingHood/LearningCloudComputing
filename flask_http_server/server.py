@@ -14,7 +14,7 @@ def terminate_slave():
 
 def start_slave():
     start_time = time.time()
-    result = subprocess.run(['ansible-playbook', './vm_manager/slave_start.yml', '--extra-vars', 'aws_access_key=' + os.environ.get('AWS_ACCESS_KEY_ID'), 'aws_secret_key=' + os.environ.get('AWS_SECRET_ACCESS_KEY')], stdout=PIPE, stderr=PIPE)
+    result = subprocess.run(['ansible-playbook', './vm_manager/slave_start.yml', '--extra-vars', '"aws_access_key=' + os.environ.get('AWS_ACCESS_KEY_ID'), 'aws_secret_key=' + os.environ.get('AWS_SECRET_ACCESS_KEY') + '"'], stdout=PIPE, stderr=PIPE)
     if result.returncode != 0:
         print('stdout:', result.stdout.decode('utf-8'))
         print('stderr:', result.stderr.decode('utf-8'))
