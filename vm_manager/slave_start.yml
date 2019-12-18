@@ -25,13 +25,23 @@
     
     -  debug:
           msg: "{{ slave_ec2.instances[0].public_ip }}"
-         #msg: "{{ slave_ec2['ansible_facts']['ansible_ec2_public_ipv4'] }}"
     
-    - name: Add all instance public IPs to host group
-      add_host: hostname={{ item.public_ip }} groups=ec2hosts
-      loop: "{{ slave_ec2.instances }}"
-    - name: install python module
-      command: python3 -m pip install requests
+    
+    - name: Copy worker (Flask server) to the slave
+      copy:
+        src: ./../slave_vm_worker/worker.py
+        dest: ~/worker.py
+        mode: 0644
+        
+    - name: Install Flask on a slave VM
+      command: python3 -m pip install Flask
+      
+    - name: Start worker
+      command: python3 ~/worker.py
+    
+#    - name: Add all instance public IPs to host group
+#      add_host: hostname={{ item.public_ip }} groups=ec2hosts
+#      loop: "{{ slave_ec2.instances }}"
 
  
 

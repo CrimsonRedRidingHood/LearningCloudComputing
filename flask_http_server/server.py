@@ -2,6 +2,7 @@ import os
 import subprocess
 import time
 import re
+import requests
 
 from flask import Flask
 from subprocess import PIPE
@@ -12,11 +13,12 @@ aws_access_key = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
 slave_start_playbook = './vm_manager/slave_start.yml'
+slave_terminate_playbook = './vm_manager/slave_terminate.yml'
 
 app = Flask(__name__)
 
 def terminate_slave():
-    subprocess.run(['ansible-playbook', './vm_manager/slave_terminate.yml'])
+    subprocess.run(['ansible-playbook', slave_terminate_playbook])
 
 def start_slave():
     start_time = time.time()
@@ -48,6 +50,10 @@ def debug_start_slave():
 def debug_stop_slave():
     terminate_slave()
     return 'Slave has been terminated'
+    
+@app.route('/get_quote')
+def get_quote():
+    return requests.get("http://" + slave_ip + ":5000/").content
     
 if __name__ == '__main__':
     app.run(debug='True', host='0.0.0.0', port=5000);
