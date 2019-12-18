@@ -23,7 +23,8 @@
       
     
     -  debug:
-         msg: "{{ slave_ec2['ansible_facts']['ansible_ec2_public_ipv4'] }}"
+          msg: "{{ slave_ec2.instances[0].network_interfaces[0].association.public_ip }}"
+         #msg: "{{ slave_ec2['ansible_facts']['ansible_ec2_public_ipv4'] }}"
     
     - name: Add all instance public IPs to host group
       add_host: hostname={{ item.public_ip }} groups=ec2hosts
