@@ -13,7 +13,7 @@
          instance_type: t2.micro
          image: "ami-0d5d9d301c853a04a"
          wait: yes
-         state: 'running'
+         #state: 'running'
          exact_count: 1
          count_tag:
             Name: slave
