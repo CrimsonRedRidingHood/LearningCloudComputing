@@ -27,11 +27,11 @@
           msg: "{{ slave_ec2.instances[0].public_ip }}"
     
     
-#    - name: Copy worker (Flask server) to the slave
-#      copy:
-#        src: ./../slave_vm_worker/worker.py
-#        dest: ~/worker.py
-#        mode: 0644
+    - name: Copy worker (Flask server) to the slave
+      copy:
+        src: ./../slave_vm_worker/worker.py
+        dest: ~/worker.py
+        mode: 0644
         
 #    - name: Install Flask on a slave VM
 #      command: python3 -m pip install Flask
