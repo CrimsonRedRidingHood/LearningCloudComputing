@@ -65,9 +65,20 @@ def start_slave():
     slave_server_runner = threading.Thread(target=run_slave_server, args=(slave_server_address,))
     slave_server_runner.start()
     
+    time.sleep(5)
+    
     global slave_socket
     slave_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    slave_socket.connect((slave_ip, 5000))
+    
+    is_socket_connected = False
+    
+    # connecting to the slave using sockets
+    while !is_socket_connected:
+        is_socket_connected = True
+        try:
+            slave_socket.connect((slave_ip, 5000))
+        except
+            is_socket_connected = False
     
     return slave_ip
     
