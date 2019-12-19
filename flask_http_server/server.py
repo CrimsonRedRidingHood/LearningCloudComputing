@@ -56,7 +56,8 @@ def start_slave():
         print('stderr:', result.stderr.decode('utf-8'))
         return
     print(result.stdout.decode('utf-8'))
-    global slave_ip = re.findall(r'\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b', result.stdout.decode('utf-8'))[0]
+    global slave_ip
+    slave_ip = re.findall(r'\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b', result.stdout.decode('utf-8'))[0]
     print('slave vm with public ip', slave_ip, 'has been started')
     slave_server_address = "ec2-" + slave_ip.replace('.','-') + ".us-east-2.compute.amazonaws.com"
     copy_server_to_slave(slave_server_address)
