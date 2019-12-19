@@ -4,7 +4,7 @@ import socket
 quotes_list = [\
 "Everything popular is wrong (Oscrar Wilde)",\
 "Second thoughts are the reinforcements of the firsts thoughts you were trying to ignore. (Steve)",
-"No one can resolve your conflicts you battles in your heart, but you. (Steve)",\
+"No one can resolve your conflicts and battles in your heart, but you. (Steve)",\
 "It's just good business. (Lord Beckett)",\
 "Some are born great, others achieve greatness. (William Shakespeare)",\
 "You know, you can't be best at everything... hold on... no, it's just a limiting belief - you can be best at everything.",\
