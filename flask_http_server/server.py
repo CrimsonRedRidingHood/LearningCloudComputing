@@ -27,7 +27,7 @@ def terminate_slave():
     subprocess.run(['ansible-playbook', slave_terminate_playbook])
 
 def copy_server_to_slave(slave_server_address):
-    subprocess.run(["scp", "-i", slave_credentials_file, slave_worker_file, "ubuntu@" + slave_server_address + ":~/server.py"])
+    subprocess.run(["sudo", "sh", "scp", "-i", slave_credentials_file, "-o", '"StrictHostKeyChecking no"' slave_worker_file, "ubuntu@" + slave_server_address + ":~/server.py"])
     
 def run_slave_server(slave_server_address):
     ssh_connection = paramiko.SSHClient()
@@ -57,7 +57,6 @@ def start_slave():
     copy_server_to_slave(slave_server_address)
     #slave_server_runner = threading.Thread(target=run_slave_server, args=(slave_server_address))
     #slave_server_runner.start()
-    run_slave_server()
     return slave_ip
     
 
