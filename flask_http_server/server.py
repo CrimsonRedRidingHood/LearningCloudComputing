@@ -5,6 +5,7 @@ import re
 import requests
 import threading
 import paramiko
+import socket
 
 from flask import Flask
 from subprocess import PIPE
@@ -31,7 +32,7 @@ def terminate_slave():
 def copy_server_to_slave(slave_server_address):
     returncode = 1
     while returncode != 0:
-        returncode = subprocess.run(["sudo", "scp", "-i", slave_credentials_file, "-o", 'StrictHostKeyChecking=no', slave_worker_file, "ubuntu@" + slave_server_address + ":~/server.py"]).returncode
+        returncode = subprocess.run(["sudo", "scp", "-i", slave_credentials_file, "-o", 'StrictHostKeyChecking=no', slave_worker_file, "ubuntu@" + slave_server_address + ":~/worker.py"]).returncode
     
 def run_slave_server(slave_server_address):
     ssh_connection = paramiko.SSHClient()
@@ -40,11 +41,8 @@ def run_slave_server(slave_server_address):
     print('Host keys loaded')
     ssh_connection.connect(slave_server_address, username="ubuntu", key_filename=slave_credentials_file)
     print('Successfully connected')
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("sudo apt-get update")
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("sudo apt-get install python3-pip")
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("Y")
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("pip3 install Flask")
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("sudo python3 ~/server.py")
+    #ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("sudo apt-get update")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("sudo python3 ~/worker.py")
 
 def start_slave():
     start_time = time.time()
@@ -66,6 +64,11 @@ def start_slave():
     copy_server_to_slave(slave_server_address)
     slave_server_runner = threading.Thread(target=run_slave_server, args=(slave_server_address,))
     slave_server_runner.start()
+    
+    global slave_socket
+    slave_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    slave_socket.connect((slave_ip, 5000))
+    
     return slave_ip
     
 
@@ -84,7 +87,9 @@ def debug_stop_slave():
     
 @app.route('/get_quote')
 def get_quote():
-    return requests.get("http://" + slave_ip + ":5000/").content
+    slave_socket.sendall('1')
+    data = slave_socket.recv(1024)
+    return data
     
 if __name__ == '__main__':
     app.run(debug='True', host='0.0.0.0', port=5000);
