@@ -3,6 +3,8 @@ import subprocess
 import time
 import re
 import requests
+import threading
+import paramiko
 
 from flask import Flask
 from subprocess import PIPE
@@ -20,6 +22,15 @@ app = Flask(__name__)
 def terminate_slave():
     subprocess.run(['ansible-playbook', slave_terminate_playbook])
 
+def copy_server_to_slave(slave_server_address):
+    subprocess.run(["scp", "-i", "./../SlaveVMSSHCredentials.pem", "./../slave_vm_worker/worker.py", "ubuntu@" + slave_server_address + ":~/server.py")
+    
+def run_slave_server(slave_server_address):
+    ssh_connection = paramiko.SSHClient()
+    ssh_connection.connect(slave_server_address, pkey="./../SlaveVMSSHCredentials.pem")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("python3 -m pip install Flask")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("sudo python3 ~/server.py")
+
 def start_slave():
     start_time = time.time()
     # used to pass AWS keys to the ansible-playbook
@@ -35,6 +46,11 @@ def start_slave():
     print(result.stdout.decode('utf-8'))
     slave_ip = re.findall(r'\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b', result.stdout.decode('utf-8'))[0]
     print('slave vm with public ip', slave_ip, 'has been started')
+    slave_server_address = "ec2-" + slave_ip.replace('.','-') + ".us-east-2.compute.amazonaws.com"
+    copy_server_to_slave(slave_server_address)
+    slave_server_runner = threading.Thread(target=run_slave_server, args=(slave_server_address))
+    slave_server_runner.start()
+    run_slave_server()
     return slave_ip
     
 
