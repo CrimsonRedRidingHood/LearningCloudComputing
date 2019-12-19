@@ -77,7 +77,7 @@ def start_slave():
         is_socket_connected = True
         try:
             slave_socket.connect((slave_ip, 5000))
-        except
+        except:
             is_socket_connected = False
     
     return slave_ip
