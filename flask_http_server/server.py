@@ -38,8 +38,8 @@ def run_slave_server(slave_server_address):
     print('Host keys loaded')
     ssh_connection.connect(slave_server_address, username="ubuntu", key_filename=slave_credentials_file)
     print('Successfully connected')
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("python3 -m pip install Flask")
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("sudo python3 ~/server.py")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("python3 -m pip install Flask")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("sudo python3 ~/server.py")
 
 def start_slave():
     start_time = time.time()
