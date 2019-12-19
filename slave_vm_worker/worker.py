@@ -10,5 +10,5 @@ server_socket.listen(1)
 connected_master, addr = server_socket.accept()
 while True:
     data = connected_master.recv(1)
-    connected_master.sendall(random.choice(quotes_list))
+    connected_master.sendall(random.choice(quotes_list).encode())
 connected_master.close()

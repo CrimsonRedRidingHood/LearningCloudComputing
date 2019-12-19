@@ -98,9 +98,9 @@ def debug_stop_slave():
     
 @app.route('/get_quote')
 def get_quote():
-    slave_socket.sendall('1')
+    slave_socket.sendall('1'.encode())
     data = slave_socket.recv(1024)
-    return data
+    return data.decode()
     
 if __name__ == '__main__':
     app.run(debug='True', host='0.0.0.0', port=5000);
