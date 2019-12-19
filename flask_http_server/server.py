@@ -58,7 +58,7 @@ def start_slave():
     print('slave vm with public ip', slave_ip, 'has been started')
     slave_server_address = "ec2-" + slave_ip.replace('.','-') + ".us-east-2.compute.amazonaws.com"
     copy_server_to_slave(slave_server_address)
-    slave_server_runner = threading.Thread(target=run_slave_server, args=(slave_server_address))
+    slave_server_runner = threading.Thread(target=run_slave_server, args=(slave_server_address,))
     slave_server_runner.start()
     return slave_ip
     
