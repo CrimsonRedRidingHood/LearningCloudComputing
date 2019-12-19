@@ -17,17 +17,21 @@ aws_secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 slave_start_playbook = './vm_manager/slave_start.yml'
 slave_terminate_playbook = './vm_manager/slave_terminate.yml'
 
+slave_credentials_file = './SlaveVMSSHCredentials.pem'
+
+slave_worker_file = './slave_vm_worker/worker.py'
+
 app = Flask(__name__)
 
 def terminate_slave():
     subprocess.run(['ansible-playbook', slave_terminate_playbook])
 
 def copy_server_to_slave(slave_server_address):
-    subprocess.run(["scp", "-i", "./../SlaveVMSSHCredentials.pem", "./../slave_vm_worker/worker.py", "ubuntu@" + slave_server_address + ":~/server.py"])
+    subprocess.run(["scp", "-i", slave_credentials_file, slave_worker_file, "ubuntu@" + slave_server_address + ":~/server.py"])
     
 def run_slave_server(slave_server_address):
     ssh_connection = paramiko.SSHClient()
-    ssh_connection.connect(slave_server_address, pkey="./../SlaveVMSSHCredentials.pem")
+    ssh_connection.connect(slave_server_address, pkey=slave_credentials_file)
     ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("python3 -m pip install Flask")
     ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("sudo python3 ~/server.py")
 
