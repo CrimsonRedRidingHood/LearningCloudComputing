@@ -40,7 +40,10 @@ def run_slave_server(slave_server_address):
     print('Host keys loaded')
     ssh_connection.connect(slave_server_address, username="ubuntu", key_filename=slave_credentials_file)
     print('Successfully connected')
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("python3 -m pip install Flask")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("sudo apt-get update")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("sudo apt-get install python3-pip")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("Y")
+    ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("pip3 install Flask")
     ssh_stdin, ssh_stdout, ssh_stderr = ssh_connection.exec_command("sudo python3 ~/server.py")
 
 def start_slave():
