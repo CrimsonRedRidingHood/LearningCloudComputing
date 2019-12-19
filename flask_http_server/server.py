@@ -7,7 +7,7 @@ import threading
 import paramiko
 import socket
 
-from flask import Flask
+from flask import Flask, request, send_from_directory
 from subprocess import PIPE
 
 is_slave_running = False
