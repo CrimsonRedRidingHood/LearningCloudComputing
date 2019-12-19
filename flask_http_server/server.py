@@ -34,8 +34,9 @@ def copy_server_to_slave(slave_server_address):
 def run_slave_server(slave_server_address):
     ssh_connection = paramiko.SSHClient()
     ssh_connection.load_system_host_keys()
+    ssh_connection.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     print('Host keys loaded')
-    ssh_connection.connect(slave_server_address, username="ubuntu", pkey=slave_credentials_file)
+    ssh_connection.connect(slave_server_address, username="ubuntu", key_filename=slave_credentials_file)
     print('Successfully connected')
     ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("python3 -m pip install Flask")
     ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("sudo python3 ~/server.py")
@@ -57,8 +58,8 @@ def start_slave():
     print('slave vm with public ip', slave_ip, 'has been started')
     slave_server_address = "ec2-" + slave_ip.replace('.','-') + ".us-east-2.compute.amazonaws.com"
     copy_server_to_slave(slave_server_address)
-    #slave_server_runner = threading.Thread(target=run_slave_server, args=(slave_server_address))
-    #slave_server_runner.start()
+    slave_server_runner = threading.Thread(target=run_slave_server, args=(slave_server_address))
+    slave_server_runner.start()
     return slave_ip
     
 
