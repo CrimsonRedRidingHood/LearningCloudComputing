@@ -88,7 +88,7 @@ def index():
 def return_script(path_to_file):
     return send_from_directory('js', path_to_file)
 
-@app.route('/js/<path:path_to_file>')
+@app.route('/css/<path:path_to_file>')
 def return_style(path_to_file):
     return send_from_directory('css', path_to_file)
     
