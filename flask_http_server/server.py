@@ -24,8 +24,16 @@ slave_worker_file = './slave_vm_worker/worker.py'
 
 app = Flask(__name__, static_url_path='/')
 
+slave_lock = threading.Lock()
+
 def terminate_slave():
+    
+    slave_lock.acquire(True)
+
     subprocess.run(['ansible-playbook', slave_terminate_playbook])
+    is_slave_running = False
+    
+    slave_lock.release()
 
 def copy_server_to_slave(slave_server_address):
     returncode = 1
@@ -78,6 +86,10 @@ def start_slave():
         except:
             is_socket_connected = False
     
+    threading.Timer(300.0, terminate_slave).start()
+    
+    is_slave_running = True
+    
     return slave_ip
 
 @app.route('/')
@@ -92,19 +104,23 @@ def return_script(path_to_file):
 def return_style(path_to_file):
     return send_from_directory('css', path_to_file)
     
-@app.route('/start')
-def debug_start_slave():
-    return start_slave()
-    
-@app.route('/stop')
-def debug_stop_slave():
-    terminate_slave()
-    return 'Slave has been terminated'
+#@app.route('/start')
+#def debug_start_slave():
+#    return start_slave()
     
 @app.route('/get_quote')
 def get_quote():
+
+    slave_lock.acquire(True)
+    
+    if not is_slave_running:
+        start_slave()
+    
     slave_socket.sendall('1'.encode())
     data = slave_socket.recv(1024)
+    
+    slave_lock.release()
+    
     return data.decode()
     
 if __name__ == '__main__':
