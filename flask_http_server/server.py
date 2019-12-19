@@ -24,7 +24,7 @@ slave_credentials_file = './SlaveVMSSHCredentials.pem'
 
 slave_worker_file = './slave_vm_worker/worker.py'
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/')
 
 def terminate_slave():
     subprocess.run(['ansible-playbook', slave_terminate_playbook])
@@ -81,11 +81,10 @@ def start_slave():
             is_socket_connected = False
     
     return slave_ip
-    
 
 @app.route('/')
 def index():
-    return 'Nice to meet you'
+    return send_from_directory('', 'index.html')
     
 @app.route('/start')
 def debug_start_slave():
