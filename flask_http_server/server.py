@@ -33,7 +33,7 @@ def run_slave_server(slave_server_address):
     ssh_connection = paramiko.SSHClient()
     ssh_connection.load_system_host_keys()
     print('Host keys loaded')
-    ssh_connection.connect(slave_server_address, username="ubuntu" pkey=slave_credentials_file)
+    ssh_connection.connect(slave_server_address, username="ubuntu", pkey=slave_credentials_file)
     print('Successfully connected')
     ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("python3 -m pip install Flask")
     ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("sudo python3 ~/server.py")
