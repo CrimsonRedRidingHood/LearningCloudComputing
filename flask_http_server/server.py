@@ -12,8 +12,6 @@ from subprocess import PIPE
 
 is_slave_running = False
 
-#slave_ip = ''
-
 aws_access_key = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
@@ -85,6 +83,14 @@ def start_slave():
 @app.route('/')
 def index():
     return send_from_directory('', 'index.html')
+    
+@app.route('/js/<path:path_to_file>')
+def return_script(path_to_file):
+    return send_from_directory('js', path_to_file)
+
+@app.route('/js/<path:path_to_file>')
+def return_style(path_to_file):
+    return send_from_directory('css', path_to_file)
     
 @app.route('/start')
 def debug_start_slave():
